@@ -6,13 +6,13 @@ The large database further allows using Machine Learning technics to predict var
 
 ## Copyrights
 
-Copyright (c) 2016 Charles Le Losq, Danilo Di Genova, Daniel R. Neuville
+Copyright (c) 2016 Charles Le Losq, Danilo Di Genova and contributors.
 
-Authors:
+SiliCat has been created on the original idea of Charles Le Losq and Danilo Di Genova. The contributors are:
 
 Charles Le Losq, Research School of Earth Sciences, The Australian National University, Australia.
 
-Danilo Di Genova, Department of Earth and Environmental Sciences, Section for Mineralogy, Petrology and Geochemistry, University of Munich, Germany.
+Danilo Di Genova, Department of Earth and Environmental Sciences, Section for Mineralogy, Petrology and Geochemistry, University of Munich, Germany
 
 Daniel R. Neuville, Laboratoire de Géomatériaux, Institut de Physique du Globe de Paris, France.
 
