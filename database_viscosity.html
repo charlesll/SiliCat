@@ -1,0 +1,55 @@
+<html>
+
+	  <head>
+      <title>SiliCat: viscosity database</title>
+
+			<script type="text/javascript">
+
+         var db = openDatabase('./data/viscosity/viscosity.sqlite', '1.0', 'viscosity', 5537 * 19);
+         var msg;
+
+         db.transaction(function (tx) {
+            tx.executeSql('SELECT * FROM viscosity WHERE sio2 > 50 AND sio2 < 60', [], function (tx, results) {
+               var len = results.rows.length, i;
+               msg = "<p>Found rows: " + len + "</p>";
+               document.querySelector('#status').innerHTML +=  msg;
+
+               for (i = 0; i < len; i++){
+                  msg = "<p><b>" + results.rows.item(i).log + "</b></p>";
+                  document.querySelector('#status').innerHTML +=  msg;
+               }
+            }, null);
+         });
+
+      </script>
+	  </head>
+
+	  <body>
+			<em> SiliCat: access to the viscosity database</em><br>
+
+			<pr> SiliCat can search which compositions are close in a given range to your inputs. Please enter the values for your composition, in mol%, in the cells below, as well as the width of the chemical domain you want to look at (in mol%).</pr><br>
+			<form>
+				SiO2:<input type="text" name="sio2"><br>
+				TiO2:<input type="text" name="tio2"><br>
+ 				Al2O3:<input type="text" name="al2o3"><br>
+				FeO(total):<input type="text" name="feot"><br>
+				MnO:<input type="text" name="mno"><br>
+				BaO:<input type="text" name="bao"><br>
+				SrO:<input type="text" name="sro"><br>
+				MgO:<input type="text" name="mgo"><br>
+				CaO:<input type="text" name="cao"><br>
+				Li2O:<input type="text" name="li2o"><br>
+				Na2O:<input type="text" name="na2o"><br>
+				K2O:<input type="text" name="k2o"><br>
+				P2O5:<input type="text" name="p2o5"><br>
+				H2O:<input type="text" name="h2o"><br>
+
+			</form>
+
+      <div id="status" name="status">Status Message</div>
+
+
+
+    </body>
+
+</html>
