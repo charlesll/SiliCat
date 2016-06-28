@@ -6,13 +6,9 @@ The large database further allows using Machine Learning technics to predict var
 
 ## Copyrights
 
-###Creators: 
+Copyright (c) 2016 Charles Le Losq, Danilo Di Genova, Daniel R. Neuville
 
-Charles Le Losq, Research School of Earth Sciences, The Australian National University, Australia.
-
-Danilo Di Genova, Department of Earth and Environmental Sciences, Section for Mineralogy, Petrology and Geochemistry, University of Munich, Germany.
-
-###Contributors:
+Authors:
 
 Charles Le Losq, Research School of Earth Sciences, The Australian National University, Australia.
 
