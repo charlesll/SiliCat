@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "cells": [
+    {
+      "type": "cs",
+      "input": "assist"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Inputs_fit.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse paths: [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Inputs_fit.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Inputs_fit.txt\"]\n  destination_frame: \"Inputs_fit.hex\"\n  parse_type: \"CSV\"\n  separator: 9\n  number_columns: 12\n  single_quotes: false\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Outputs_fit.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse paths: [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Outputs_fit.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Outputs_fit.txt\"]\n  destination_frame: \"Outputs_fit.hex\"\n  parse_type: \"CSV\"\n  separator: 32\n  number_columns: 1\n  single_quotes: false\n  column_types: [\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Outputs_fit.txt\"]\n  destination_frame: \"Outputs_fit.hex\"\n  parse_type: \"CSV\"\n  separator: 32\n  number_columns: 1\n  single_quotes: false\n  column_names: [\"Viscosity\"]\n  column_types: [\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Inputs_fit.txt\"]\n  destination_frame: \"Inputs_fit.hex\"\n  parse_type: \"CSV\"\n  separator: 9\n  number_columns: 12\n  single_quotes: false\n  column_names: [\"Si\",\"Ti\",\"Al\",\"Fe\",\"Mn\",\"Mg\",\"Ca\",\"Na\",\"K\",\"P\",\"H2O\",\"T\"]\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "buildModel \"deeplearning\""
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "getFrames"
+    },
+    {
+      "type": "cs",
+      "input": "deleteFrames [\"Inputs_fit.hex\",\"Outputs_fit.hex\"]"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Train_forH2O.txt\",\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "buildModel \"deeplearning\""
+    },
+    {
+      "type": "cs",
+      "input": "setupParse paths: [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Train_forH2O.txt\",\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Train_forH2O.txt\",\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\"]\n  destination_frame: \"Train_forH2O.hex\"\n  parse_type: \"CSV\"\n  separator: 9\n  number_columns: 13\n  single_quotes: false\n  column_names: [\"Si\",\"Ti\",\"Al\",\"Fe\",\"Mn\",\"Mg\",\"Ca\",\"Na\",\"K\",\"P\",\"H2O\",\"T\",\"Visco\"]\n  column_types: [\"Time\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"Train_forH2O.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "getFrames"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse paths: [ \"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  paths: [\"/Users/closq/Dropbox/NeuralNetwork/Viscosity/data/Valid_forH2O.txt\"]\n  destination_frame: \"Valid_forH2O.hex\"\n  parse_type: \"CSV\"\n  separator: 9\n  number_columns: 13\n  single_quotes: false\n  column_names: [\"Si\",\"Ti\",\"Al\",\"Fe\",\"Mn\",\"Mg\",\"Ca\",\"Na\",\"K\",\"P\",\"H2O\",\"T\",\"Visco\"]\n  column_types: [\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: true\n  check_header: -1\n  chunk_size: 4194304"
+    },
+    {
+      "type": "cs",
+      "input": "buildModel \"deeplearning\""
+    },
+    {
+      "type": "cs",
+      "input": "buildModel 'deeplearning', {\"model_id\":\"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\",\"training_frame\":\"Train_forH2O.hex\",\"validation_frame\":\"Valid_forH2O.hex\",\"ignored_columns\":[],\"ignore_const_cols\":true,\"response_column\":\"Visco\",\"activation\":\"Tanh\",\"hidden\":[20,20],\"epochs\":10,\"variable_importances\":false,\"checkpoint\":\"\",\"use_all_factor_levels\":true,\"train_samples_per_iteration\":-2,\"adaptive_rate\":true,\"input_dropout_ratio\":0,\"l1\":0,\"l2\":0,\"loss\":\"Automatic\",\"score_interval\":5,\"score_training_samples\":10000,\"score_validation_samples\":0,\"score_duty_cycle\":0.1,\"replicate_training_data\":true,\"autoencoder\":false,\"overwrite_with_best_model\":true,\"target_ratio_comm_to_comp\":0.02,\"seed\":9055614084358042000,\"rho\":0.99,\"epsilon\":1e-8,\"max_w2\":\"Infinity\",\"initial_weight_distribution\":\"UniformAdaptive\",\"regression_stop\":0.000001,\"diagnostics\":true,\"fast_mode\":true,\"force_load_balance\":true,\"single_node_mode\":false,\"shuffle_training_data\":false,\"missing_values_handling\":\"MeanImputation\",\"quiet_mode\":false,\"sparse\":false,\"col_major\":false,\"average_activation\":0,\"sparsity_beta\":0,\"max_categorical_features\":2147483647,\"reproducible\":false,\"export_weights_and_biases\":false}"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\""
+    },
+    {
+      "type": "cs",
+      "input": "buildModel 'deeplearning', {\"model_id\":\"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\",\"training_frame\":\"Train_forH2O.hex\",\"validation_frame\":\"Valid_forH2O.hex\",\"ignored_columns\":[],\"ignore_const_cols\":true,\"response_column\":\"Visco\",\"activation\":\"Tanh\",\"hidden\":[30,30],\"epochs\":10,\"variable_importances\":false,\"checkpoint\":\"\",\"use_all_factor_levels\":true,\"train_samples_per_iteration\":-2,\"adaptive_rate\":true,\"input_dropout_ratio\":0,\"l1\":0,\"l2\":0,\"loss\":\"Automatic\",\"score_interval\":5,\"score_training_samples\":10000,\"score_validation_samples\":0,\"score_duty_cycle\":0.1,\"replicate_training_data\":true,\"autoencoder\":false,\"overwrite_with_best_model\":true,\"target_ratio_comm_to_comp\":0.02,\"seed\":9055614084358042000,\"rho\":0.99,\"epsilon\":1e-8,\"max_w2\":\"Infinity\",\"initial_weight_distribution\":\"UniformAdaptive\",\"regression_stop\":0.000001,\"diagnostics\":true,\"fast_mode\":true,\"force_load_balance\":true,\"single_node_mode\":false,\"shuffle_training_data\":false,\"missing_values_handling\":\"MeanImputation\",\"quiet_mode\":false,\"sparse\":false,\"col_major\":false,\"average_activation\":0,\"sparsity_beta\":0,\"max_categorical_features\":2147483647,\"reproducible\":false,\"export_weights_and_biases\":false}"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\""
+    },
+    {
+      "type": "cs",
+      "input": "getJobs"
+    },
+    {
+      "type": "cs",
+      "input": "buildModel 'deeplearning', {\"model_id\":\"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\",\"training_frame\":\"Train_forH2O.hex\",\"validation_frame\":\"Valid_forH2O.hex\",\"ignored_columns\":[],\"ignore_const_cols\":true,\"response_column\":\"Visco\",\"activation\":\"Tanh\",\"hidden\":[200,200],\"epochs\":10,\"variable_importances\":false,\"checkpoint\":\"\",\"use_all_factor_levels\":true,\"train_samples_per_iteration\":-2,\"adaptive_rate\":true,\"input_dropout_ratio\":0,\"l1\":0,\"l2\":0,\"loss\":\"Automatic\",\"score_interval\":5,\"score_training_samples\":10000,\"score_validation_samples\":0,\"score_duty_cycle\":0.1,\"replicate_training_data\":true,\"autoencoder\":false,\"overwrite_with_best_model\":true,\"target_ratio_comm_to_comp\":0.02,\"seed\":9055614084358042000,\"rho\":0.99,\"epsilon\":1e-8,\"max_w2\":\"Infinity\",\"initial_weight_distribution\":\"UniformAdaptive\",\"regression_stop\":0.000001,\"diagnostics\":true,\"fast_mode\":true,\"force_load_balance\":true,\"single_node_mode\":false,\"shuffle_training_data\":false,\"missing_values_handling\":\"MeanImputation\",\"quiet_mode\":false,\"sparse\":false,\"col_major\":false,\"average_activation\":0,\"sparsity_beta\":0,\"max_categorical_features\":2147483647,\"reproducible\":false,\"export_weights_and_biases\":false}"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"deeplearning-7497f95e-c636-49a4-a9d4-64d1eab709ab\""
+    }
+  ]
+}
