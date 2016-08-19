@@ -85,20 +85,20 @@ def train_nn(X_input_train,Y_input_train,X_input_test,Y_input_test,name,**option
             model = Sequential()
     
             # 1 LAYER
-            model.add(Dense(16, init='he_normal',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,)))
-            model.add(PReLU())
-            #model.add(Activation('relu'))
+            model.add(Dense(16, init='lecun_uniform',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,)))
+            #model.add(PReLU())
+            model.add(Activation('relu'))
             #model.add(Dropout(0.1))
                 
             # 2 LAYER
-            model.add(Dense(8, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
-            model.add(PReLU())            
-            #model.add(Activation('relu'))
-            
+            model.add(Dense(8, init='lecun_uniform',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
+            #model.add(PReLU())            
+            model.add(Activation('relu'))
+        
             # 3 LAYER
-            model.add(Dense(4, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
-            model.add(PReLU())            
-            #model.add(Activation('relu'))
+            model.add(Dense(4, init='lecun_uniform',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
+            #model.add(PReLU())            
+            model.add(Activation('relu'))
             
             # 4 LAYER
             #model.add(Dense(100, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.0025))) 
@@ -109,7 +109,7 @@ def train_nn(X_input_train,Y_input_train,X_input_test,Y_input_test,name,**option
             #model.add(Activation('relu'))
         
             # 1 output, linear activation
-            model.add(Dense(1, init='he_normal'))
+            model.add(Dense(1, init='lecun_uniform'))
             model.add(Activation('linear'))
             
         if mode == "local":

@@ -54,24 +54,47 @@ Y_input_valid = scaler_y_g.transform(y_v_g)
 X_input_wanted = scaler_x_g.transform(user_wants[:,0:15])
 
 #%% MODEL DEFINITION
-def make_model(x1_size,x2_size,x4_size,x1_l1,x2_l1,x4_l1,x1_l2,x2_l2,x4_l2,x1_acti,x2_acti,x4_acti):
-    chem_input = Input(shape=(14,), name = 'chem_in')
+def make_model(modeltype,x1_size,x2_size,x4_size,x1_l1,x2_l1,x4_l1,x1_l2,x2_l2,x4_l2,x1_acti,x2_acti,x4_acti):
+    
+    if modeltype == "doubleentry":
+        
+        chem_input = Input(shape=(14,), name = 'chem_in')
 
-    # first 2 layers
-    x1 = Dense(x1_size, W_regularizer=l1l2(l1=x1_l1,l2=x1_l2), activation=layer1_acti, init='he_normal')(chem_input)
-    x2 = Dense(x2_size,  W_regularizer=l1l2(l1=x2_l1,l2=x2_l2), activation=x2_acti, init='he_normal')(x1_b)
-
-    # Add temperature input and a custom layer
-    temperature_input = Input(shape=(1,), name='temp_input')
-    x3 = merge([x2, temperature_input], mode='concat')
-
-    # add custom output layer
-    x4 = Dense(x4_size, W_regularizer=l1l2(l1=x4_l1,l2=x4_l2), activation=x4_acti, init='he_normal')(x3)
-    output = Dense(1, activation='linear', init='he_normal')(x4)
-    #output = Lambda(tvf_th, output_shape=(1,))(x3)
-    #model.add(Dense(1, init='he_normal'))
-
-    model = Model(input=[chem_input, temperature_input], output=[output])
+        # first 2 layers
+        x1 = Dense(x1_size, W_regularizer=l1l2(l1=x1_l1,l2=x1_l2), activation=x1_acti, init='he_normal')(chem_input)
+        x2 = Dense(x2_size,  W_regularizer=l1l2(l1=x2_l1,l2=x2_l2), activation=x2_acti, init='he_normal')(x1)
+    
+        # Add temperature input and a custom layer
+        temperature_input = Input(shape=(1,), name='temp_input')
+        x3 = merge([x2, temperature_input], mode='concat')
+    
+        # add custom output layer
+        x4 = Dense(x4_size, W_regularizer=l1l2(l1=x4_l1,l2=x4_l2), activation=x4_acti, init='he_normal')(x3)
+        output = Dense(1, activation='linear', init='he_normal')(x4)
+        #output = Lambda(tvf_th, output_shape=(1,))(x3)
+        #model.add(Dense(1, init='he_normal'))
+    
+        model = Model(input=[chem_input, temperature_input], output=[output])
+    
+    elif modeltype == "pyramide":
+        
+        model = Sequential()
+    
+        # 1 LAYER
+        model.add(Dense(16, init='he_normal',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,)))
+        model.add(Activation('relu'))
+            
+        # 2 LAYER
+        model.add(Dense(8, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001)))          
+        model.add(Activation('relu'))
+    
+        # 3 LAYER
+        model.add(Dense(4, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001)))         
+        model.add(Activation('relu'))
+    
+        # 1 output, linear activation
+        model.add(Dense(1, init='he_normal'))
+        model.add(Activation('linear'))
 
     model.compile(loss='mse', optimizer='Nadam')
 
@@ -79,10 +102,10 @@ def make_model(x1_size,x2_size,x4_size,x1_l1,x2_l1,x4_l1,x1_l2,x2_l2,x4_l2,x1_ac
     
 layer1_acti = ('relu',)
 layer2_acti = ('linear',)
-layer3_acti = ('tanh',)
+layer3_acti = ('relu',)
     
-model = make_model(20,3,5,0.001,0.001,0.00001,0.01,0.01,0.0001,layer1_acti[0],layer2_acti[0],layer3_acti[0])
-early_stopping = EarlyStopping(monitor='val_loss', patience=50)
+model = make_model("doubleentry",20,3,5,0.001,0.001,0.00001,0.01,0.01,0.0001,layer1_acti[0],layer2_acti[0],layer3_acti[0])
+early_stopping = EarlyStopping(monitor='val_loss', patience=25)
 # you can group inputs as [x1,x2]
 model.fit([X_input_train[:,0:14],X_input_train[:,14]], Y_input_train, nb_epoch=2000, batch_size=100, validation_data=([X_input_test[:,0:14],X_input_test[:,14]], Y_input_test),callbacks=[early_stopping])
 #%%     
