@@ -1,0 +1,5 @@
+# For now the database are locked before further publication
+./data/viscosity/viscosity.csv
+./data/viscosity/viscosity.sqlite
+./saved_subsets/*.npy
+./data/viscosity/saved_subsets/*.pkl

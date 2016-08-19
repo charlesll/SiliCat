@@ -29,35 +29,30 @@ def chemical_splitting(Pandas_DataFrame, split_fraction):
             This is the amount of splitting you want, in reference to the second output dataset (see OUTPUTS).            
             
         OUTPUTS:
-            first_dataset : A Pandas DataFrame 
-                A DataSet with 1-split_fraction datas from the input dataset with unique chemical composition / names
+            frame1 : A Pandas DataFrame 
+                A DataSet with (1-split_fraction) datas from the input dataset with unique chemical composition / names
             
-            second_dataset : A Pandas DataFrame 
+            frame2 : A Pandas DataFrame 
                 A DataSet with split_fraction datas from the input dataset with unique chemical composition / names
+                
+            frame1_idx : A numpy array containing the indexes of the data picked in Pandas_DataFrame to construct frame1
+            
+            frame2_idx : A numpy array containing the indexes of the data picked in Pandas_DataFrame to construct frame2
     """
     names = Pandas_DataFrame['Name'].unique()
-    frame2_idx = np.random.randint(0,len(names),int(split_fraction*len(names)))
     names_idx = np.arange(len(names))
+
+    # getting index for the frames with the help of scikitlearn
+    frame1_idx, frame2_idx = cross_validation.train_test_split(names_idx, test_size = split_fraction)        
     
-    for i in range(len(frame2_idx)):
-        if i == 0:
-            frame2 = Pandas_DataFrame[Pandas_DataFrame.Name == str(names[frame2_idx[i]])]
-        else:
-            frame = Pandas_DataFrame[Pandas_DataFrame.Name == str(names[frame2_idx[i]])]
-            frame2 = pd.concat([frame2,frame])
-            
+    # and now grabbing the relevant pandas dataframes
+    ttt = np.in1d(Pandas_DataFrame.Name,names[frame1_idx])
+    frame1 = Pandas_DataFrame[ttt == True]    
     
-    ix = np.in1d(names_idx.ravel(), frame2_idx).reshape(names_idx.shape)
-    frame1_idx = np.where(ix == False)
+    ttt2 = np.in1d(Pandas_DataFrame.Name,names[frame2_idx])
+    frame2 = Pandas_DataFrame[ttt2 == True] 
     
-    for i in range(np.size(frame1_idx,1)):
-        if i == 0:
-            frame1 = Pandas_DataFrame[Pandas_DataFrame.Name == str(names[frame1_idx[0][i]])]
-        else:
-            frame = Pandas_DataFrame[Pandas_DataFrame.Name == str(names[frame1_idx[0][i]])]
-            frame1 = pd.concat([frame1,frame])
-    
-    return frame1, frame2  
+    return frame1, frame2, frame1_idx, frame2_idx  
 
 def general_input(path):
 
@@ -98,11 +93,11 @@ def general_input(path):
     # Create a SQL connection to our SQLite database
     con = sqlite3.connect(path)
     
-    df = pd.read_sql_query("SELECT * from visco_data", con)
+    df = pd.read_sql_query("SELECT * from viscosity", con)
     
     # we first split the dataset in train, test and validation sub-datasets
-    df_train, df_testvalid = chemical_splitting(df, split_fraction = 0.3)
-    df_test, df_valid = chemical_splitting(df_testvalid, split_fraction = 0.5)
+    df_train, df_testvalid, train_idx, testvalid_idx = chemical_splitting(df, split_fraction = 0.3)
+    df_test, df_valid, test_idx, valid_idx = chemical_splitting(df_testvalid, split_fraction = 0.5)
     
     con.close() # closing the sql connection
 
@@ -187,11 +182,11 @@ def local_input(path, data_roi):
               data_roi[13,0]-data_roi[13,1],data_roi[13,0]+data_roi[13,1])
 
     #df = pd.read_sql_query("SELECT * from visco_data WHERE %f<sio2<%f AND %f<tio2<%f AND %f<al2o3<%f AND %f<feot<%f AND %f<mno<%f AND %f<bao<%f AND %f<sro<%f AND %f<mgo<%f AND %f<cao<%f AND %f<li2o<%f AND %f<na2o<%f AND %f<k2o<%f AND %f<p2o5<%f AND %f<h2o<%f" %selection, con)
-    df = pd.read_sql_query("SELECT * from visco_data WHERE %f<sio2 AND sio2<%f AND %f<tio2 AND tio2<%f AND %f<al2o3 AND al2o3<%f AND %f<feot AND feot<%f AND %f<mno AND mno<%f AND %f<bao AND bao<%f AND %f<sro AND sro<%f AND %f<mgo AND mgo<%f AND %f<cao AND cao<%f AND %f<li2o AND li2o<%f AND %f<na2o AND na2o<%f AND %f<k2o AND k2o<%f AND %f<p2o5 AND p2o5<%f AND %f<h2o AND h2o<%f" %selection, con)
+    df = pd.read_sql_query("SELECT * from viscosity WHERE %f<sio2 AND sio2<%f AND %f<tio2 AND tio2<%f AND %f<al2o3 AND al2o3<%f AND %f<feot AND feot<%f AND %f<mno AND mno<%f AND %f<bao AND bao<%f AND %f<sro AND sro<%f AND %f<mgo AND mgo<%f AND %f<cao AND cao<%f AND %f<li2o AND li2o<%f AND %f<na2o AND na2o<%f AND %f<k2o AND k2o<%f AND %f<p2o5 AND p2o5<%f AND %f<h2o AND h2o<%f" %selection, con)
     
     # we first split the dataset in train, test and validation sub-datasets
-    df_train, df_testvalid = chemical_splitting(df, split_fraction = 0.3)
-    df_test, df_valid = chemical_splitting(df_testvalid, split_fraction = 0.5)
+    df_train, df_testvalid, train_idx, testvalid_idx = chemical_splitting(df, split_fraction = 0.3)
+    df_test, df_valid, test_idx, valid_idx = chemical_splitting(df_testvalid, split_fraction = 0.5)
     
     con.close() # closing the sql connection
 
@@ -214,6 +209,6 @@ def local_input(path, data_roi):
 
     # scaling
     scaler_x = preprocessing.StandardScaler().fit(x_train.as_matrix())
-    scaler_y = preprocessing.StandardScaler().fit(y_train.as_matrix()) 
+    scaler_y = preprocessing.StandardScaler().fit(y_train.as_matrix())    
     
     return scaler_x,scaler_y, x_train.as_matrix(), y_train.as_matrix(), x_test.as_matrix(), y_test.as_matrix(), x_valid.as_matrix(), y_valid.as_matrix()
