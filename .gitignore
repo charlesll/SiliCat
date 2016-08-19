@@ -1,5 +1,5 @@
 # For now the database are locked before further publication
-#viscosity.csv
-#viscosity.sqlite
-#*.npy
-#*.pkl
+viscosity.csv
+viscosity.sqlite
+*.npy
+*.pkl
