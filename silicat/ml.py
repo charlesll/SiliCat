@@ -21,6 +21,7 @@ import keras
 from keras.models import Sequential, Model
 #from keras.layers.core import Dense, Dropout, Activation, Lambda
 from keras.layers import Input, Dense, Activation, Lambda, merge, Dropout
+from keras.layers.advanced_activations import PReLU
 from keras.callbacks import EarlyStopping
 from keras.models import model_from_json
 
@@ -84,17 +85,20 @@ def train_nn(X_input_train,Y_input_train,X_input_test,Y_input_test,name,**option
             model = Sequential()
     
             # 1 LAYER
-            model.add(Dense(16, init='he_normal',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,))) 
-            model.add(Activation('relu'))
+            model.add(Dense(16, init='he_normal',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,)))
+            model.add(PReLU())
+            #model.add(Activation('relu'))
             #model.add(Dropout(0.1))
                 
             # 2 LAYER
             model.add(Dense(8, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
-            model.add(Activation('relu'))
+            model.add(PReLU())            
+            #model.add(Activation('relu'))
             
             # 3 LAYER
             model.add(Dense(4, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.001))) 
-            model.add(Activation('relu'))
+            model.add(PReLU())            
+            #model.add(Activation('relu'))
             
             # 4 LAYER
             #model.add(Dense(100, init='he_normal',W_regularizer=l1l2(l1=0.0001,l2=0.0025))) 

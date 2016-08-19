@@ -17,6 +17,7 @@ import numpy as np
 from keras.models import Sequential, Model
 #from keras.layers.core import Dense, Dropout, Activation, Lambda
 from keras.layers import Input, Dense, Activation, Lambda, merge, Dropout
+from keras.layers.advanced_activations import PReLU
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import model_from_json
 from sklearn.externals import joblib
@@ -57,8 +58,8 @@ def make_model(x1_size,x2_size,x4_size,x1_l1,x2_l1,x4_l1,x1_l2,x2_l2,x4_l2,x1_ac
     chem_input = Input(shape=(14,), name = 'chem_in')
 
     # first 2 layers
-    x1 = Dense(x1_size, W_regularizer=l1l2(l1=x1_l1,l2=x1_l2), activation=x1_acti, init='he_normal')(chem_input)
-    x2 = Dense(x2_size,  W_regularizer=l1l2(l1=x2_l1,l2=x2_l2), activation=x2_acti, init='he_normal')(x1)
+    x1 = Dense(x1_size, W_regularizer=l1l2(l1=x1_l1,l2=x1_l2), activation=layer1_acti, init='he_normal')(chem_input)
+    x2 = Dense(x2_size,  W_regularizer=l1l2(l1=x2_l1,l2=x2_l2), activation=x2_acti, init='he_normal')(x1_b)
 
     # Add temperature input and a custom layer
     temperature_input = Input(shape=(1,), name='temp_input')
@@ -76,7 +77,7 @@ def make_model(x1_size,x2_size,x4_size,x1_l1,x2_l1,x4_l1,x1_l2,x2_l2,x4_l2,x1_ac
 
     return model
     
-layer1_acti = ('tanh',)
+layer1_acti = ('relu',)
 layer2_acti = ('linear',)
 layer3_acti = ('tanh',)
     
