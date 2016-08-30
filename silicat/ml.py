@@ -84,7 +84,8 @@ def train_nn(X_input_train,Y_input_train,X_input_test,Y_input_test,name,**option
             
             model = Sequential()
     
-            # 1 LAYER
+            # 1 LAYER  
+    
             model.add(Dense(16, init='lecun_uniform',W_regularizer=l1l2(l1=0.001,l2=0.01), input_shape=(15,)))
             #model.add(PReLU())
             model.add(Activation('relu'))

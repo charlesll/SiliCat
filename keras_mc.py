@@ -20,9 +20,11 @@ from keras.layers import Input, Dense, Activation, Lambda, merge, Dropout
 from keras.layers.advanced_activations import PReLU
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import model_from_json
-from sklearn.externals import joblib
-
 from keras.regularizers import l1, l1l2, activity_l1l2
+
+from sklearn import cross_validation, preprocessing
+from sklearn.utils import shuffle
+from sklearn.externals import joblib
 
 import matplotlib
 from matplotlib import pyplot as plt

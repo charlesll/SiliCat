@@ -1,10 +1,6 @@
 #! /usr/bin/env python
+# Copyrights Le Losq, Di Genova 2016
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 30 14:35:11 2016
-
-@author: Charles Le Losq
-"""
 import sys
 import numpy as np
 
