@@ -105,6 +105,10 @@ def general_input(path):
     data_test = pd.DataFrame(df_test,columns=['sio2','tio2','al2o3','feot','mno','bao','sro','mgo','cao','li2o','na2o','k2o','p2o5','h2o','T','viscosity'])
     data_valid = pd.DataFrame(df_valid,columns=['sio2','tio2','al2o3','feot','mno','bao','sro','mgo','cao','li2o','na2o','k2o','p2o5','h2o','T','viscosity'])
 
+    data_train['T']=1/data_train['T']
+    data_test['T']=1/data_test['T']
+    data_valid['T']=1/data_valid['T']
+
     shuffle_train = shuffle(data_train, random_state=0)
     shuffle_test = shuffle(data_test, random_state=0)
     shuffle_valid = shuffle(data_valid, random_state=0)
@@ -193,6 +197,10 @@ def local_input(path, data_roi):
     data_train = pd.DataFrame(df_train,columns=['sio2','tio2','al2o3','feot','mno','bao','sro','mgo','cao','li2o','na2o','k2o','p2o5','h2o','T','viscosity'])
     data_test = pd.DataFrame(df_test,columns=['sio2','tio2','al2o3','feot','mno','bao','sro','mgo','cao','li2o','na2o','k2o','p2o5','h2o','T','viscosity'])
     data_valid = pd.DataFrame(df_valid,columns=['sio2','tio2','al2o3','feot','mno','bao','sro','mgo','cao','li2o','na2o','k2o','p2o5','h2o','T','viscosity'])
+
+    data_train['T']=1/data_train['T']
+    data_test['T']=1/data_test['T']
+    data_valid['T']=1/data_valid['T']
 
     shuffle_train = shuffle(data_train, random_state=0)
     shuffle_test = shuffle(data_test, random_state=0)

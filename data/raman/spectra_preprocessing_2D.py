@@ -44,10 +44,10 @@ def longcorr(data,temp,wave): # input are a two column matrix of data, temperatu
 #%% 
 ##############################################################################
 # names
-type_data = "supervised"
+type_data = "fe_sp"
 
 # the next definition are important as they define the spectral region we look at and record in the global array
-x_lf = np.arange(250.0,1350.0,2.0) # this is the low frequency of the common x axis
+x_lf = np.arange(250.0,1300.0,2.0) # this is the low frequency of the common x axis
 x_hf = np.arange(3000.0,3900.0,2.0) # this is the high frequency of the common x axis
 x = np.concatenate((x_lf,x_hf),0) # this is the final common x axis
 
@@ -59,46 +59,74 @@ try:
         outname = "spectra_2d_supervised.pkl"
         spectra_liste = np.genfromtxt(in_name,delimiter=',',skip_header=1,dtype = 'string') # reading the list
         names = spectra_liste[:,0]
+        spectra = np.zeros((len(spectra_liste),len(y_scale),len(x))) # this is the final array where spectra will be saved as a pickle file on the HDD.
+
     elif type_data == "unsupervised":
         in_name = "content.csv" # for pre-training
         outname = "spectra_2d_unsupervised.pkl"
-        spectra_liste = np.genfromtxt(in_name,delimiter=',',skip_header=1,dtype = 'string') # reading the list
+        spectra_liste = np.genfromtxt(in_name,delimiter=',',skip_header=0,dtype = 'string') # reading the list
         names = spectra_liste[:]
+        spectra = np.zeros((len(spectra_liste),len(y_scale),len(x))) # this is the final array where spectra will be saved as a pickle file on the HDD.
+
+    elif type_data == "fe_sp":
+        in_name = "fe_sp_std.csv" # for pre-training
+        outname = "spectra_2d_sp.pkl"
+        spectra_liste = np.genfromtxt(in_name,delimiter=',',skip_header=1,dtype = 'string') # reading the list
+        names = spectra_liste[:,0]
+        spectra = np.zeros((len(spectra_liste),len(y_scale),len(x_lf))) # this is the final array where spectra will be saved as a pickle file on the HDD.
+
     else:
-        raise NameError('NameError: type_data should be set to "supervised" or "unsupervised"')
+        raise NameError('NameError: type_data should be set to "supervised", "unsupervised" or "fe_sp"')
+        
 except NameError as err:
         print(err.args) 
-
-spectra = np.ones((len(spectra_liste),len(y_scale),len(x))) # this is the final array where spectra will be saved as a pickle file on the HDD.
-
-#switch = "simple"
 
 #%%
 for i in range(0,len(spectra_liste)): # starting the loop
 
     spectrum = np.genfromtxt("/Users/charles/OneDrive - Australian National University/spectra/"+names[i]) # we let genfromtxt guess the delimiter, hopping it works
     #spectrum[:,1] = longcorr(spectrum,514.532,23.0)
-    #Checking if water signal is present, if not we put a false signal to 0
-    test = spectrum[:,0] >= 3000.0
-    if any(test) ==  False:
-        water_signal = np.zeros((len(x_hf),2))
-        water_signal[:,0]= x_hf[:]
-        spectrum = np.concatenate((spectrum,water_signal),axis=0)
+    
+    # checking that the signal is increasing, and correcting if necessary
+    if spectrum[-1,0] < spectrum[0,0]:
+        spectrum[:,:] = spectrum[::-1,:]
+    
+    # for test fe spectra
+    if type_data == "fe_sp":
+        # resampling
+        tck = interpolate.splrep(spectrum[:,0],spectrum[:,1]) 
+        signal = interpolate.splev(x_lf,tck,der=0) # re-sampled signal with the good x axis        
+        signal_corrected = signal - np.min(signal)
+    
+        signal_corrected= signal_corrected
+        signal_corrected = signal_corrected/np.max(signal_corrected) # maximum is set to 1
+        # recording the spectra into the global Array
+        for j in range(0,x_lf.size):
+            spectra[i,np.where(y_scale<=signal_corrected[j]),j] = 1.0
         
-    # resampling
-    tck = interpolate.splrep(spectrum[:,0],spectrum[:,1]) 
-    signal = interpolate.splev(x,tck,der=0) # re-sampled signal with the good x axis        
-    signal_corrected = signal - np.min(signal)
-    
-    signal_corrected= signal_corrected +0.001 # we take care of any negative values = minimum is set to 0.001 (lowest pixel)
-    signal_corrected = signal_corrected/np.max(signal_corrected) # maximum is set to 1
-    # recording the spectra into the global Array
-    
-    water_index = np.where(x==3000)    
-    for j in range(0,water_index[0][0]):
-        spectra[i,np.where(y_scale<=signal_corrected[j]),j] = 0.0
-    for j in range(water_index[0][0],len(x)):
-        spectra[i,np.where(y_scale<=signal_corrected[j]),j] = 0.5
+    # for the other spectra with water peak    
+    else:            
+        #Checking if water signal is present, if not we put a false signal to 0
+        test = spectrum[:,0] >= 3000.0
+        if any(test) ==  False:
+            water_signal = np.zeros((len(x_hf),2))
+            water_signal[:,0]= x_hf[:]
+            spectrum = np.concatenate((spectrum,water_signal),axis=0)
+            
+        # resampling
+        tck = interpolate.splrep(spectrum[:,0],spectrum[:,1]) 
+        signal = interpolate.splev(x,tck,der=0) # re-sampled signal with the good x axis        
+        signal_corrected = signal - np.min(signal)
+        
+        signal_corrected= signal_corrected
+        signal_corrected = signal_corrected/np.max(signal_corrected) # maximum is set to 1
+        # recording the spectra into the global Array
+        
+        water_index = np.where(x==3000)    
+        for j in range(0,water_index[0][0]):
+            spectra[i,np.where(y_scale<=signal_corrected[j]),j] = 1.0
+        for j in range(water_index[0][0],len(x)):
+            spectra[i,np.where(y_scale<=signal_corrected[j]),j] = 0.5
 #    for j in range(0,len(x)):
 #        for k in range(0,len(y_scale)):
 #            if np.isclose(y_scale[k],signal_corrected[j],rtol=0.02) == True:
@@ -109,7 +137,7 @@ pkl.dump(spectra, f)
 f.close()  
           
 #%%
-choice = 30 #spectrum number
+choice = 3 #spectrum number
 
 plt.figure()
 plt.imshow(spectra[choice,:,:])

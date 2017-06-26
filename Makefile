@@ -3,7 +3,7 @@
 gendata: 
 	-rm -r ./data/viscosity/saved_subsets/*.pkl
 	-rm -r ./data/viscosity/saved_subsets/*.npy
-	python data_generation.py
+	python data_generation.py viscosity
 
 .PHONY : clean	
 clean:

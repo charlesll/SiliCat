@@ -3,5 +3,5 @@ viscosity.csv
 viscosity.sqlite
 *.npy
 *.pkl
-
+/dev_ml/
 .DS_Store
